@@ -88,26 +88,28 @@ const getMeraki = async (course_id) => {
   // return
   
   for (let exercise of fullCourse.course.exercises) {
-    const [convertedContent, decision] = await translateMeraki(exercise.content)
+    if (exercise.name) {
+      const [convertedContent, decision] = await translateMeraki(exercise.content)
+      const strapiFormat = {
+        "time": Date.now(),
+        "blocks": convertedContent,
+        "version": "2.23.2"
+      }
+      const data = {
+        data: {
+          name: exercise.name,
+          content: JSON.stringify(strapiFormat),
+          type: exercise.type,
+          sequence_num: exercise.sequence_num,
+          course_id
+        }
+      }
+      const res = await postData(data)
+      console.log(res.data.data.id)
+      if (decision) exercisesWithTable.push(res.data.data.id)
+    }
     // console.log(convertedContent, '\n 77777777777777')
 
-    const strapiFormat = {
-      "time": Date.now(),
-      "blocks": convertedContent,
-      "version": "2.23.2"
-    }
-    const data = {
-      data: {
-        name: exercise.name,
-        content: JSON.stringify(strapiFormat),
-        type: exercise.type,
-        sequence_num: exercise.sequence_num,
-        course_id
-      }
-    }
-    const res = await postData(data)
-    console.log(res.data.data.id)
-    if (decision) exercisesWithTable.push(res.data.data.id)
 
     // return
   }
@@ -124,5 +126,5 @@ const getMeraki = async (course_id) => {
 
 }
 
-const course_id = 1; 
+const course_id = 505; // give course id
 getMeraki(course_id)
