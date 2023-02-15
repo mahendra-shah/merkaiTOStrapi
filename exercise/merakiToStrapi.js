@@ -1,12 +1,6 @@
-// const axios = require('axios');
-// require('dotenv').config()
-
-// const postBaseURL = 'http://merd-strapi.merakilearn.org/api';
-// const getBaseURL = 'https://dev-api.navgurukul.org';
-
 class merakiToStrapiConverter {
 
-  headPara(merakiData) {
+  header(merakiData) {
     if (merakiData.component == 'header') {
       return {
         "id": "RR6LLbctBB",
@@ -15,37 +9,47 @@ class merakiToStrapiConverter {
           "text": merakiData.value,
           "level": merakiData.variant
         }
-      }
-    } else if (merakiData.component == 'text') {
+      };
+    };
+  };
+
+  paragraph(merakiData) {
+    if (merakiData.component == 'text' || merakiData.component == 'markdown') {
       return {
         "id": "AFca5LpZrs",
         "type": "paragraph",
         "data": {
           "text": merakiData.value
         }
+      };
+    };
+  };
+
+  list(merakiData) {
+    const listType = merakiData.decoration.type
+    const items = []
+    // for (let item )
+    return {
+      "id": "joQ8lmnyBF",
+      "type": "list",
+      "data": {
+        "style": listType == 'number' ? 'ordered' : 'unordered',
+        "items": [
+          merakiData.value
+        ]
       }
     }
   };
 
-  list(merakiData) {
-    if (merakiData.decoration.type == 'number') {
+  code(merakiData) {
+    if (merakiData.component == 'code') {
       return {
-        "component": "text",
-        "value": merakiData.value,
-        "decoration": {
-          "type": "ordered",
-          "value": merakiData.decoration.value
+        "id": "J9kgA2mvSX",
+        "type": "code",
+        "data": {
+          "code": `💡 Code Example \n\n${merakiData.value.replace(/<br>/g, "\n").replace(/&emsp;/g, '\t')}`
         }
-      }
-    } else if (merakiData.decoration.type == 'bullet') {
-      return {
-        "component": "text",
-        "value": merakiData.value,
-        "decoration": {
-          "type": "unordered",
-          "value": merakiData.decoration.value
-        }
-      }
+      };
     };
   };
 
@@ -145,3 +149,4 @@ class merakiToStrapiConverter {
 }
 
 module.exports = merakiToStrapiConverter;
+// export default merakiToStrapiConverter;
