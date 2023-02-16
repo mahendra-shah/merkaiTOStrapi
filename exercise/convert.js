@@ -98,6 +98,7 @@ const getMeraki = async (course_id) => {
       const data = {
         data: {
           name: exercise.name,
+          description: exercise.description,
           content: JSON.stringify(strapiFormat),
           type: exercise.type,
           sequence_num: exercise.sequence_num,
