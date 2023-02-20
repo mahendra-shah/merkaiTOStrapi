@@ -102,7 +102,7 @@ const getMeraki = async (course_id) => {
           content: JSON.stringify(strapiFormat),
           type: exercise.type,
           sequence_num: exercise.sequence_num,
-          course_id
+          course: fullCourse.course.id
         }
       }
       const res = await postData(data)
